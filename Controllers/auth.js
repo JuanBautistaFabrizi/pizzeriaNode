@@ -7,11 +7,16 @@ const UserRegister = async (req, res) => {
   const newUser = new User({ name, email, password, role });
 
   const salt = genSaltSync(8);
-  newUser.password = hashSync(password, salt);
-
-  await newUser.save();
-
-  res.json({
-    newUser,
-  });
+  try {
+    newUser.password = hashSync(password, salt);
+    await newUser.save();
+  
+    res.json({
+      newUser,
+    });
+    
+  } catch (error) {
+    console.log(error);
+  }
 };
+
