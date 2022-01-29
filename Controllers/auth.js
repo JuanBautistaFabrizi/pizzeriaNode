@@ -34,7 +34,7 @@ const userLogin = async (req,res) => {
       res.status(401).json({msg: 'password incorrecto'})
     }
 
-    const token = await generateJTW(user.id);
+    const token = await generateJWT(user.id);
     res.status(200).json(user,token);
   } catch (error) {
     res.status(500).json(error)
