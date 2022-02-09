@@ -13,32 +13,49 @@ const allProducts = async (req, res) => {
   res.status(200).json({ total, products });
 };
 
-const getProduct = async(req,res) => {
-    const {id} = req.params;
-    const product = await Product.findById(id);
-    res.status(200).json(product);
-}
+const getProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  res.status(200).json(product);
+};
 
-const createProduct = async (req,res) => {
-    const name = req.body.name.toUpperCase();
-    const productDB = await Product.findOne({name});
-    if(productDB){
-        res.status(400).json({msg: `El producto ${productDB} ya existe`})
-    }
+const createProduct = async (req, res) => {
+  const name = req.body.name.toUpperCase();
+  const productDB = await Product.findOne({ name });
+  if (productDB) {
+    res.status(400).json({ msg: `El producto ${productDB} ya existe` });
+  }
 
-    const data = {
-        name: name.toUpperCase()
-    }
+  const data = {
+    name: name.toUpperCase(),
+  };
 
-    const product = await Product(data);
-    await product.save();
-    res.status(201).json(product);
+  const product = await Product(data);
+  await product.save();
+  res.status(201).json(product);
+};
 
-}
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { status, ...data } = req.body;
+  if (data.name) {
+    data.name = data.name.toUpperCase();
+  }
 
-const updateProduct = async (req,res) => {
-    const {id} = req.params;
-    const {status,...data} = req.body;
+  const updateProduct = await Product.findByIdAndUpdate(id, data);
+  res.status(200).json(updateProduct);
+};
 
-    
-}
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const deletedProduct = await Product.findByIdAndDelete(id, { status: false });
+  res.status(200).json(deletedProduct);
+};
+
+module.exports = {
+  allProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
