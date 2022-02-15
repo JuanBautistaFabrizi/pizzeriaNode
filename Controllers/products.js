@@ -8,7 +8,7 @@ const allProducts = async (req, res) => {
     Product.find(query)
       .populate("category", "name")
       .skip(Number(limit))
-      .skip(Number(from)),
+      .skip(Number(from))
   ]);
   res.status(200).json({ total, products });
 };
